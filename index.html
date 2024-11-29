@@ -9,6 +9,34 @@
 
 <body>
     <p>Home page</p>
+    <div class="container"></div>
 </body>
+
+<script>
+    let createAudio = (uri) =>
+    {
+        const mainClassElement = "container";
+        let mainDiv = document.getElementsByClassName(mainClassElement)[0];
+
+        let soundDiv = document.createElement("div");
+        let soundAudio = document.createElement("audio");
+        soundAudio.setAttribute("controls", "");
+        soundAudio.setAttribute("src", uri);
+
+        soundDiv.appendChild(soundAudio);
+        mainDiv.appendChild(soundDiv);
+    }
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "sound.php", false);
+    xhr.send();
+
+    const soundsAsObjects = JSON.parse(xhr.response);
+
+    for(let sound of soundsAsObjects)
+    {
+        createAudio(sound.filePath);
+    }
+</script>
 
 </html>
