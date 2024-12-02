@@ -3,15 +3,20 @@
 class Sound implements JsonSerializable
 {
     private $_filePath;
+    private $_username;
 
-    public function __construct($filePath)
+    public function __construct($filePath, $username)
     {
         $this->_filePath = $filePath;
+        $this->_username = $username;
     }
 
     public function jsonSerialize(): array
     {
-        return ['filePath' => $this->_filePath];
+        return [
+            'filePath' => $this->_filePath,
+            'username' => $this->_username
+        ];
     }
 
     public static function getSongsFromDirectory(): array
@@ -19,12 +24,20 @@ class Sound implements JsonSerializable
         $sounds = [];
         $allFiles = new DirectoryIterator(dirname(__FILE__)."/sounds");
 
+        $usernames = 
+        [
+            "user1",
+        ];
+
+        $i = 0;
         foreach ($allFiles as $soundFile)
         {
             if ($soundFile->isFile())
             {
-                $sound = new Sound("sounds/{$soundFile->getFilename()}");
+                $username = isset($usernames[$i]) ? $usernames[$i] : "unknown";
+                $sound = new Sound("sounds/{$soundFile->getFilename()}", $username);
                 $sounds[] = $sound;
+                $i++;
             }
         }
 

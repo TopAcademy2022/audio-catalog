@@ -13,30 +13,34 @@
 </body>
 
 <script>
-    let createAudio = (uri) =>
-    {
-        const mainClassElement = "container";
-        let mainDiv = document.getElementsByClassName(mainClassElement)[0];
+   let createAudio = (uri, username) => {
+    const mainClassElement = "container";
+    let mainDiv = document.getElementsByClassName(mainClassElement)[0];
 
-        let soundDiv = document.createElement("div");
-        let soundAudio = document.createElement("audio");
-        soundAudio.setAttribute("controls", "");
-        soundAudio.setAttribute("src", uri);
+    let soundDiv = document.createElement("div");
+    let soundAudio = document.createElement("audio");
+    soundAudio.setAttribute("controls", "");
+    soundAudio.setAttribute("src", uri);
 
-        soundDiv.appendChild(soundAudio);
-        mainDiv.appendChild(soundDiv);
-    }
+    let userNameDiv = document.createElement("p");
+    userNameDiv.textContent = `Track added: ${username}`;
 
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", "sound.php", false);
-    xhr.send();
+    soundDiv.appendChild(soundAudio);
+    soundDiv.appendChild(userNameDiv);
+    mainDiv.appendChild(soundDiv);
+}
 
-    const soundsAsObjects = JSON.parse(xhr.response);
+let xhr = new XMLHttpRequest();
+xhr.open("GET", "sound.php", false);
+xhr.send();
 
-    for(let sound of soundsAsObjects)
-    {
-        createAudio(sound.filePath);
-    }
+const soundsAsObjects = JSON.parse(xhr.response);
+
+for(let sound of soundsAsObjects)
+{
+    createAudio(sound.filePath, sound.username);
+}
+
 </script>
 
 </html>
