@@ -23,7 +23,7 @@
 </body>
 
 <script>
-	let createAudio = (uri) =>
+	let createAudio = (uri, audioName) =>
 	{
 		const mainClassElement = "container";
 		let mainDiv = document.getElementsByClassName(mainClassElement)[0];
@@ -34,13 +34,19 @@
 
 		let playButton = document.createElement("button");
 		playButton.classList.add("col-1");
-		playButton.innerHTML = "play";
-		playButton.addEventListener("click", () => {
+		playButton.innerText = "play";
+		playButton.addEventListener("click", () =>
+		{
 			let playerOnWindow = document.getElementsByTagName("audio")[0];
 			playerOnWindow.setAttribute("src", uri);
 		});
 
+		let soundName = document.createElement("p");
+		soundName.classList.add("col-2");
+		soundName.innerText = audioName;
+
 		soundDiv.appendChild(playButton);
+		soundDiv.appendChild(soundName);
 		mainDiv.appendChild(soundDiv);
 	}
 
@@ -52,7 +58,7 @@
 
 	for (let sound of soundsAsObjects)
 	{
-		createAudio(sound.filePath);
+		createAudio(sound.filePath, sound.name);
 	}
 </script>
 
