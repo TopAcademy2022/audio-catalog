@@ -1,13 +1,30 @@
 <?php
 
+if($_SERVER['REQUEST_METHOD'] == 'POST')
+{
+    $json = file_get_contents('php://input');
+    $json = json_decode($json);
+    if($json->{"login"} == "alex")
+    {
+        echo'alert(true)';
+    }
+    else
+    {
+        echo'alert(false)';
+    }
+}
+
 class Sound implements JsonSerializable
 {
     private $_filePath;
+    
     private $_username;
 
-    public function __construct($filePath, $username)
+	private $_name;
+    public function __construct($filePath, $name, $username)
     {
         $this->_filePath = $filePath;
+		$this->_name = $name;
         $this->_username = $username;
     }
 
@@ -15,6 +32,7 @@ class Sound implements JsonSerializable
     {
         return [
             'filePath' => $this->_filePath,
+			'name' => $this->_name,
             'username' => $this->_username
         ];
     }
@@ -22,22 +40,13 @@ class Sound implements JsonSerializable
     public static function getSongsFromDirectory(): array
     {
         $sounds = [];
-        $allFiles = new DirectoryIterator(dirname(__FILE__)."/sounds");
+        $allFiles = new DirectoryIterator(dirname(__FILE__) . "/sounds");
 
-        $usernames = 
-        [
-            "user1",
-        ];
 
-        $i = 0;
-        foreach ($allFiles as $soundFile)
-        {
-            if ($soundFile->isFile())
-            {
-                $username = isset($usernames[$i]) ? $usernames[$i] : "unknown";
-                $sound = new Sound("sounds/{$soundFile->getFilename()}", $username);
+        foreach ($allFiles as $soundFile) {
+            if ($soundFile->isFile()) {
+                $sound = new Sound("sounds/{$soundFile->getFilename()}", "example", "admin");
                 $sounds[] = $sound;
-                $i++;
             }
         }
 
