@@ -1,5 +1,19 @@
 <?php
 
+if($_SERVER['REQUEST_METHOD'] == 'POST')
+{
+    $json = file_get_contents('php://input');
+    $json = json_decode($json);
+    if($json->{"login"} == "alex")
+    {
+        echo'alert(true)';
+    }
+    else
+    {
+        echo'alert(false)';
+    }
+}
+
 class Sound implements JsonSerializable
 {
     private $_filePath;
