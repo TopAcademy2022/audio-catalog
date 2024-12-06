@@ -21,6 +21,7 @@ class Sound implements JsonSerializable
     private $_username;
 
 	private $_name;
+	
     public function __construct($filePath, $name, $username)
     {
         $this->_filePath = $filePath;
@@ -42,9 +43,10 @@ class Sound implements JsonSerializable
         $sounds = [];
         $allFiles = new DirectoryIterator(dirname(__FILE__) . "/sounds");
 
-
-        foreach ($allFiles as $soundFile) {
-            if ($soundFile->isFile()) {
+        foreach ($allFiles as $soundFile)
+		{
+            if ($soundFile->isFile())
+			{
                 $sound = new Sound("sounds/{$soundFile->getFilename()}", "example", "admin");
                 $sounds[] = $sound;
             }
@@ -54,7 +56,7 @@ class Sound implements JsonSerializable
     }
 }
 
-if($_SERVER['REQUEST_METHOD'] == 'GET')
+if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {
     echo json_encode(Sound::getSongsFromDirectory(), JSON_UNESCAPED_UNICODE);
 }
