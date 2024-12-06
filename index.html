@@ -14,7 +14,7 @@
 <body>
 	<nav class="navbar navbar-expand-lg bg-body-tertiary">
 		<div class="container-fluid row justify-content-end">
-			<button class="btn btn-outline-success col-2" id="regModalBtn">Регистрация</button>
+			<button class="btn btn-outline-success col-2" id="regModalBtn">Registration</button>
 		</div>
 	</nav>
     <div class="row mb-5">
@@ -32,7 +32,7 @@
 			<div class="modal-header">
 			  <form class="col-12">
 				<div class="text-center">
-					<h1>Регистрация</h1>
+					<h1>Set your data</h1>
 				</div>
 				<div class="mb-3">
 				  <label for="exampleInputLogin" class="form-label">Login</label>
@@ -42,8 +42,8 @@
 				  <label for="exampleInputPassword1" class="form-label">Password</label>
 				  <input type="password" class="form-control" id="LoginPassword">
 				</div>
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
-				<button id="regBtn" type="button" class="btn btn-primary">Регистрация</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+				<button id="regBtn" type="button" class="btn btn-primary">Submit</button>
 			  </form> 
 			</div>
 		  </div>
@@ -74,14 +74,14 @@
     	alert(xhr.response);
 	}
 
-    let createAudio = (uri, audioName) =>
+    let createAudio = (uri, audioName, audioAuthor) =>
 	{
 		const mainClassElement = "container";
 		let mainDiv = document.getElementsByClassName(mainClassElement)[0];
 
-		let soundDiv = document.createElement("div");
-		soundDiv.classList.add("row");
-		soundDiv.classList.add("mb-4");
+    let soundDiv = document.createElement("div");
+    soundDiv.classList.add("row");
+    soundDiv.classList.add("mb-4");
 
 		let playButton = document.createElement("button");
 		playButton.classList.add("col-1");
@@ -96,21 +96,26 @@
 		soundName.classList.add("col-2");
 		soundName.innerText = audioName;
 
-		soundDiv.appendChild(playButton);
-		soundDiv.appendChild(soundName);
-		mainDiv.appendChild(soundDiv);
-	}
+		let usernameSpan = document.createElement("p");
+    	usernameSpan.classList.add("col-2");
+    	usernameSpan.innerText = audioAuthor;
 
-	let xhr = new XMLHttpRequest();
-	xhr.open("GET", "sound.php", false);
-	xhr.send();
+    soundDiv.appendChild(playButton);
+    soundDiv.appendChild(soundName);
+    soundDiv.appendChild(usernameSpan);
+    mainDiv.appendChild(soundDiv);
+  }
 
-	const soundsAsObjects = JSON.parse(xhr.response);
+  let xhr = new XMLHttpRequest();
+  xhr.open("GET", "sound.php", false);
+  xhr.send();
 
-	for (let sound of soundsAsObjects)
-	{
-		createAudio(sound.filePath, sound.name);
-	}
+  const soundsAsObjects = JSON.parse(xhr.response);
+
+  for (let sound of soundsAsObjects)
+  {
+    createAudio(sound.filePath, sound.name, sound.username); 
+  }
 	
 </script>
 
