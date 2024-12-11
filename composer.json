@@ -1,0 +1,30 @@
+{
+    "name": "opensource/audio-catalog",
+    "description": "Simple audio catalog",
+    "type": "project",
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "vlucas/phpdotenv": "^5.4",
+        "illuminate/database": "^10.48"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "App\\": "./"
+        }
+    },
+    "autoload-dev": {
+        "phpunit/phpunit": "^9.0"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "php artisan package:discover --ansi"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist"
+    }
+}

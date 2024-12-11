@@ -16,7 +16,6 @@ public_html/storage
 public_html/hot
 
 storage/*.key
-.env
 Homestead.yaml
 Homestead.json
 /.vagrant
@@ -24,3 +23,13 @@ Homestead.json
 
 # Page for sounds
 sounds/*
+
+# Composer temp
+composer.lock
+
+# Example IDE
+.vscode
+.osp
+
+# For example building
+#.env
