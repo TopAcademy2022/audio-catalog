@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Audio catalog</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -14,10 +14,11 @@
 <body>
 	<nav class="navbar navbar-expand-lg bg-body-tertiary">
 		<div class="container-fluid row justify-content-end">
+			<button class="btn btn-outline-success col-2" id="uploadSound">Upload sound</button>
 			<button class="btn btn-outline-success col-2" id="regModalBtn">Registration</button>
 		</div>
 	</nav>
-    <div class="row mb-5">
+	<div class="row mb-5">
 		<div class="col-5"></div>
 		<h1 class="col-2">Home page</h1>
 	</div>
@@ -25,63 +26,120 @@
 	<div class="row fixed-bottom">
 		<audio controls autoplay></audio>
 	</div>
-	
+
 	<div id="regModal" class="modal" tabindex="-1">
 		<div class="modal-dialog">
-		  <div class="modal-content">
-			<div class="modal-header">
-			  <form class="col-12">
-				<div class="text-center">
-					<h1>Set your data</h1>
+			<div class="modal-content">
+				<div class="modal-header">
+					<form class="col-12">
+						<div class="text-center">
+							<h1>Set your data</h1>
+						</div>
+						<div class="mb-3">
+							<label for="exampleInputLogin" class="form-label">Login</label>
+							<input type="text" class="form-control" id="LoginInput" aria-describedby="emailHelp">
+						</div>
+						<div class="mb-3">
+							<label for="exampleInputPassword1" class="form-label">Password</label>
+							<input type="password" class="form-control" id="LoginPassword">
+						</div>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+						<button id="regBtn" type="button" class="btn btn-primary">Submit</button>
+					</form>
 				</div>
-				<div class="mb-3">
-				  <label for="exampleInputLogin" class="form-label">Login</label>
-				  <input type="text" class="form-control" id="LoginInput" aria-describedby="emailHelp">
-				</div>
-				<div class="mb-3">
-				  <label for="exampleInputPassword1" class="form-label">Password</label>
-				  <input type="password" class="form-control" id="LoginPassword">
-				</div>
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-				<button id="regBtn" type="button" class="btn btn-primary">Submit</button>
-			  </form> 
 			</div>
-		  </div>
 		</div>
 	</div>
 
+	<div id="uploadSoundModal" class="modal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<form class="col-12" enctype="multipart/form-data" method="POST">
+						<div class="text-center">
+							<h1>Set your sound</h1>
+						</div>
+						<div class="mb-3">
+							<label for="soundNameInput" class="form-label">Sound name</label>
+							<input type="text" class="form-control" id="soundNameInput" name="soundName">
+						</div>
+						<div class="mb-3">
+							<input class="form-control" type="file" name="audio" id="audioFile" accept="audio/*"
+								required>
+						</div>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 <script>
-
 	var regModalBtn = document.getElementById("regModalBtn");
 	var regBtn = document.getElementById("regBtn");
 
 	const myModalAlternative = new bootstrap.Modal(document.getElementById("regModal"));
 
-	regModalBtn.onclick = function() 
+	regModalBtn.onclick = function () 
 	{
 		myModalAlternative.show();
 	}
 
-	regBtn.onclick = function()
+	regBtn.onclick = function ()
 	{
 		let data = `{"login":"${document.getElementById("LoginInput").value}", "password": "${document.getElementById("LoginPassword").value}"}`;
 		let xhr = new XMLHttpRequest();
-    	xhr.open("POST", "sound.php", false);
-    	xhr.send(data);
+		xhr.open("POST", "app.php", false);
+		xhr.send(data);
 
-    	alert(xhr.response);
+		alert(xhr.response);
+	}
+</script>
+
+<script>
+	let openUploadSound = document.getElementById('uploadSound');
+	const uploadSoundModal = new bootstrap.Modal(document.getElementById('uploadSoundModal'));
+
+	openUploadSound.onclick = function () 
+	{
+		uploadSoundModal.show();
 	}
 
-    let createAudio = (uri, audioName, audioAuthor) =>
+	document.getElementById('uploadSoundModal').addEventListener('submit', (event) =>
+	{
+		event.preventDefault();
+		var formData = new FormData(event.target);
+
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', 'app.php');
+		xhr.send(formData);
+
+		xhr.onload = () =>
+		{
+			let result = JSON.parse(xhr.response);
+			if (result.status == 'success')
+			{
+				alert('Файл загружен успешно!');
+			}
+			else
+			{
+				alert('Ошибка при загрузке файла.');
+			}
+		};
+	});
+</script>
+
+<script>
+	let createAudio = (uri, audioName, audioAuthor) =>
 	{
 		const mainClassElement = "container";
 		let mainDiv = document.getElementsByClassName(mainClassElement)[0];
 
-    let soundDiv = document.createElement("div");
-    soundDiv.classList.add("row");
-    soundDiv.classList.add("mb-4");
+		let soundDiv = document.createElement("div");
+		soundDiv.classList.add("row");
+		soundDiv.classList.add("mb-4");
 
 		let playButton = document.createElement("button");
 		playButton.classList.add("col-1");
@@ -97,26 +155,25 @@
 		soundName.innerText = audioName;
 
 		let usernameSpan = document.createElement("p");
-    	usernameSpan.classList.add("col-2");
-    	usernameSpan.innerText = audioAuthor;
+		usernameSpan.classList.add("col-2");
+		usernameSpan.innerText = audioAuthor;
 
-    soundDiv.appendChild(playButton);
-    soundDiv.appendChild(soundName);
-    soundDiv.appendChild(usernameSpan);
-    mainDiv.appendChild(soundDiv);
-  }
+		soundDiv.appendChild(playButton);
+		soundDiv.appendChild(soundName);
+		soundDiv.appendChild(usernameSpan);
+		mainDiv.appendChild(soundDiv);
+	}
 
-  let xhr = new XMLHttpRequest();
-  xhr.open("GET", "sound.php", false);
-  xhr.send();
+	let xhr = new XMLHttpRequest();
+	xhr.open("GET", "app.php", false);
+	xhr.send();
 
-  const soundsAsObjects = JSON.parse(xhr.response);
+	const soundsAsObjects = JSON.parse(xhr.response);
 
-  for (let sound of soundsAsObjects)
-  {
-    createAudio(sound.filePath, sound.name, sound.username); 
-  }
-	
+	for (let sound of soundsAsObjects)
+	{
+		createAudio(sound.filePath, sound.name, sound.username);
+	}
 </script>
 
 </html>

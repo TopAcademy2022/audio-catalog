@@ -4,8 +4,8 @@ namespace Services;
 require_once dirname(__FILE__) . '/../models/entities/sound.php';
 require_once dirname(__FILE__) . '/database-config.php';
 
-use Models\Sound;
 use InvalidArgumentException;
+use Models\Sound;
 
 
 class SoundService
@@ -26,7 +26,7 @@ class SoundService
 	{
 		if (!is_a($soundObject, 'Models\Sound'))
 		{
-			throw new InvalidArgumentException('Переданный объект не является экземпляром Models\Sound');
+			throw new InvalidArgumentException('Переданный объект не является экземпляром Models\Sound.');
 		}
 
 		return $soundObject->save();
